@@ -10,19 +10,34 @@ The public repository remains the sole owner of `/api/auth`, `/api/content`,
 The shared Mongo database stores public business data; the separate private
 database stores administrators, sessions and audit logs.
 
-## Local setup
+## Local setup (clone → run)
 
-Use Node.js `20.19+` or `22.13+`. Copy `.env.example` to `.env`, place optional
-browser-only overrides in `.env.local`, then run:
+Use Node.js `20.19+` or `22.13+` (Node 21 is not supported).
+
+```bash
+git clone https://github.com/Ananya-ux486/Admin.git
+cd Admin
+copy .env.example .env
+```
+
+Edit `.env` and set at least:
+
+- `MONGODB_SHARED_URI` — same DB as website `MONGODB_URI` (`tasmafiveDB`)
+- `MONGODB_ADMIN_URI` — private admin DB (`tasmafiveAdminDB`)
+- `ADMIN_EMAIL` / `ADMIN_PASSWORD` — login credentials for local
+- `ADMIN_SESSION_SECRET` — random string ≥ 32 characters
+- Keep `ADMIN_ORIGINS=http://localhost:3001` for local
+
+Then:
 
 ```bash
 npm ci
 npm run dev
 ```
 
-Open `http://localhost:3001`. Useful root commands are `npm run lint`,
-`npm test`, `npm run build`, and `npm run start`. The public application can
-run alongside this one on port `3000`.
+Open `http://localhost:3001` and sign in with `ADMIN_EMAIL` / `ADMIN_PASSWORD`.
+Useful commands: `npm run lint`, `npm test`, `npm run build`, `npm run start`.
+Run the public site on port `3000` alongside this app when testing shared data.
 
 ## Hostinger deployment
 
