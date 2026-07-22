@@ -1,15 +1,39 @@
 {
-  "name": "admin",
-  "version": "0.1.0",
+  "name": "tasmafive-admin",
+  "version": "1.0.0",
   "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^20.19.0 || >=22.13.0"
+  },
+  "overrides": {
+    "postcss": "^8.5.10"
+  },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "dev": "node unified-server.mjs --development",
+    "build": "next build && npm run check:api",
+    "start": "node unified-server.mjs --production",
+    "lint": "eslint && npm run check:api",
+    "test": "npm run test:dispatcher",
+    "test:dispatcher": "node --test test/unified-dispatcher.test.mjs",
+    "check:api": "node --check src/server-api/index.js && node --check src/server-api/app.js && node --check src/server-api/load-env.js && node --check src/server-api/config.js && node --check src/server-api/db.js && node --check src/server-api/models.js && node --check src/server-api/auth.js && node --check src/server-api/security.js && node --check src/server-api/routes/admin.js",
+    "dev:api": "node --watch src/server-api/index.js",
+    "start:api": "node src/server-api/index.js"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^8.6.0",
+    "framer-motion": "^12.42.2",
+    "helmet": "^8.3.0",
+    "lucide-react": "^1.25.0",
+    "mongoose": "^8.12.1",
+    "morgan": "^1.10.0",
     "next": "16.2.10",
+    "pdfkit": "^0.19.1",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
