@@ -7,7 +7,9 @@ let adminConnection;
 const connectionOptions = {
   maxPoolSize: 10,
   minPoolSize: config.production ? 1 : 0,
-  serverSelectionTimeoutMS: 10_000,
+  serverSelectionTimeoutMS: 5_000,
+  socketTimeoutMS: 20_000,
+  maxIdleTimeMS: 30_000,
   autoIndex: !config.production,
 };
 

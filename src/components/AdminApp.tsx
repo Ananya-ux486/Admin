@@ -160,6 +160,8 @@ async function api<T>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(url, {
     ...options,
     credentials: "same-origin",
+    cache: "no-store",
+    keepalive: true,
     headers: {
       "Content-Type": "application/json",
       ...(options?.headers || {}),
@@ -202,7 +204,7 @@ function Login({ onSuccess }: { onSuccess: () => void }) {
       <motion.section
         initial={{ opacity: 0, y: 24, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
         className="login-card"
       >
         <div className="brand-mark">
@@ -263,7 +265,7 @@ function StatCard({
     <motion.div
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.06 }}
+      transition={{ delay: index * 0.03, duration: 0.28 }}
       className="stat-card"
     >
       <span className="stat-icon"><Icon size={20} /></span>
@@ -313,7 +315,7 @@ function OverviewPanel({ data }: { data: Overview | null }) {
                 key={user._id || index}
                 initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.05 }}
+                transition={{ delay: index * 0.025, duration: 0.22 }}
                 className="activity-row"
               >
                 <span className="avatar">{user.name?.slice(0, 1) || "U"}</span>
@@ -679,7 +681,7 @@ function ContentCards<T extends { _id?: string; title: string; published: boolea
           key={item._id}
           initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.04 }}
+          transition={{ delay: index * 0.02, duration: 0.22 }}
           whileHover={{ y: -4 }}
           className="content-card"
         >
@@ -996,7 +998,7 @@ export default function AdminApp() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.25 }}
+              transition={{ duration: 0.16 }}
             >
               {tab === "overview" && <OverviewPanel data={overview} />}
               {tab === "users" && <UsersPanel users={filteredUsers} search={search} setSearch={setSearch} />}
