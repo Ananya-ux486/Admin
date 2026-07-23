@@ -40,13 +40,17 @@ async function start() {
   const rootRequire = createRequire(path.join(rootDir, "package.json"));
   const next = rootRequire("next");
   const apiModule = await import("./src/server-api/app.js");
-  const nextApp = next({ dev, dir: rootDir });
+  // Use webpack instead of Turbopack in dev mode.
+  // Turbopack (default in Next.js 16) watches all files in the project root,
+  // including src/server-api/** and unified-server.mjs, causing an HMR reload
+  // loop on every request. Webpack respects watchOptions.ignored in next.config.ts.
+  const nextApp = next({ dev, dir: rootDir, turbopack: false });
 
   let apiApp;
   let server;
   let shuttingDown = false;
   try {
-    await nextApp.prepare();
+   await nextApp.prepare();
     apiApp = await apiModule.initializeAdminApi();
     server = createServer(
       createUnifiedRequestHandler(apiApp, nextApp.getRequestHandler()),

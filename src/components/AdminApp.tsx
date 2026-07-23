@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Activity,
@@ -850,6 +850,8 @@ export default function AdminApp() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [editor, setEditor] = useState<{ kind: "service" | "project"; value: Service | Project } | null>(null);
+  // Ref to prevent double session-check on HMR / StrictMode remount
+  const sessionChecked = useRef(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -877,19 +879,30 @@ export default function AdminApp() {
       setProjects(projectData.items);
       setPayments(paymentData.items);
       setPaymentLinks(paymentData.links);
+    } catch (error) {
+      console.error("[admin] failed to load dashboard data:", error);
+      // If data load fails due to auth, reset to unauthenticated
+      if (error instanceof Error && error.message.includes("authentication")) {
+        setAuthenticated(false);
+      }
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    void api("/api/admin/session")
+    // Guard against double-invocation in dev (HMR / StrictMode)
+    if (sessionChecked.current) return;
+    sessionChecked.current = true;
+
+    api("/api/admin/session")
       .then(() => {
         setAuthenticated(true);
         void load();
       })
       .catch(() => setAuthenticated(false));
-  }, [load]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filteredUsers = useMemo(() => {
     const term = search.toLowerCase();
