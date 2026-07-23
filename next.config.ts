@@ -1,25 +1,12 @@
 import type { NextConfig } from "next";
 
+const isDev = process.env.NODE_ENV === "development";
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
-  // Disable strict mode to prevent double-firing of useEffect in dev,
-  // which causes the session check to race and show the loading screen repeatedly.
-  reactStrictMode: false,
-  serverExternalPackages: [
-    "bcryptjs",
-    "mongoose",
-    "express",
-    "express-rate-limit",
-    "cors",
-    "helmet",
-    "morgan",
-    "cookie-parser",
-    "pdfkit",
-    "dotenv",
-  ],
   experimental: {
-    optimizePackageImports: ["framer-motion"],
+    optimizePackageImports: ["framer-motion", "lucide-react"],
   },
   // Prevent webpack from watching server-api and unified-server files.
   // These files are Node.js server code, not Next.js frontend code.

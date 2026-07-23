@@ -23,7 +23,13 @@ export async function initializeAdminApi() {
   app.set("trust proxy", 1);
   app.disable("x-powered-by");
   app.use(helmet());
-  app.use(config.production ? morgan("combined") : morgan("dev"));
+  app.use(
+    config.production
+      ? morgan(":method :status :response-time ms", {
+          skip: (req) => req.url === "/api/health",
+        })
+      : morgan("dev"),
+  );
   app.use(
     cors({
       credentials: true,
